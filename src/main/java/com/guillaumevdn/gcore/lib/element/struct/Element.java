@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.guillaumevdn.gcore.TextEditorGeneric;
 import com.guillaumevdn.gcore.lib.collection.CollectionUtils;
+import com.guillaumevdn.gcore.lib.compatibility.Version;
 import com.guillaumevdn.gcore.lib.compatibility.material.CommonMats;
 import com.guillaumevdn.gcore.lib.compatibility.material.Mat;
 import com.guillaumevdn.gcore.lib.configuration.YMLConfiguration;
@@ -302,7 +303,8 @@ public abstract class Element implements IElement, Comparable<Element> {
 		}
 		ItemStack icon = ItemUtils.addAllFlags(ItemUtils.createItem(editorIconType(), "§6" + getId(), lore));
 		if (!isCurrentlyDefault()) {
-			icon.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+			icon.addUnsafeEnchantment(
+			Enchantment.getByName(Version.ATLEAST_1_20_5 ? "UNBREAKING" : "DURABILITY"), 1);
 		}
 		if (this instanceof AbstractMapElement) {
 			int abstraction = getAbstraction(this, 1);

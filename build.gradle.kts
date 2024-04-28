@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
     compileOnly("com.googlecode.json-simple:json-simple:1.1.1")
-    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.20.5-R0.1-SNAPSHOT")
     compileOnly("com.mojang:authlib:1.5.26")
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") { exclude(group = "*", module = "*") }
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
@@ -61,7 +61,7 @@ tasks.register("copyFiles") {
     doLast {
         copy {
             from("$buildDir/libs/GCore.jar")
-            into("/home/guillaumevdn/Projects/plugins-servers/spigot-1.20.4/plugins")
+            into("/home/guillaumevdn/Projects/plugins-servers/spigot-1.20.5/plugins")
         }
     }
 }
