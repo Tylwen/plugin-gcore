@@ -35,7 +35,19 @@ public class NBTCompound extends NBTBase {
 
 	// ----- keys
 	public final Set<String> getKeys() throws Throwable {
-		return getTag().invokeMethod(Version.MOJANG_MAPPINGS ? "getAllKeys" : Version.ATLEAST_1_19_3 ? "e" : (Version.ATLEAST_1_18 ? "d" : (Version.ATLEAST_1_13 ? "getKeys" : "c"))).get();
+		if (Version.MOJANG_MAPPINGS) {
+			// getAllKeys was replaced by keySet in recent versions
+			Object handle = getTag().get();
+			boolean legacyKeys = false;
+			for (java.lang.reflect.Method method : handle.getClass().getMethods()) {
+				if (method.getParameterCount() == 0 && method.getName().equals("getAllKeys")) {
+					legacyKeys = true;
+					break;
+				}
+			}
+			return getTag().invokeMethod(legacyKeys ? "getAllKeys" : "keySet").get();
+		}
+		return getTag().invokeMethod(Version.ATLEAST_1_19_3 ? "e" : (Version.ATLEAST_1_18 ? "d" : (Version.ATLEAST_1_13 ? "getKeys" : "c"))).get();
 	}
 
 	public final boolean hasKey(String key) throws Throwable {

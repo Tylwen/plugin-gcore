@@ -97,6 +97,7 @@ public class PlaceholderReplacer implements Comparable<PlaceholderReplacer> {
 			// final Stack<Integer> starts = new Stack<>();
 			int start = -1;
 			int mustIgnoreEnds = 0;
+			boolean hasNested = false;
 
 			for (int i = 0; i < line.length(); ++i) {
 				char c = line.charAt(i);
@@ -104,8 +105,10 @@ public class PlaceholderReplacer implements Comparable<PlaceholderReplacer> {
 					// starts.push(i);
 					if (start == -1)
 						start = i;
-					else
+					else {
 						++mustIgnoreEnds;
+						hasNested = true;
+					}
 
 					// Bukkit.getLogger().info("> Start, i = " + i + " ; start " + start + " ; mustIgnoreEnds " + mustIgnoreEnds);
 				} else if (c == '}') {
@@ -113,7 +116,7 @@ public class PlaceholderReplacer implements Comparable<PlaceholderReplacer> {
 					 * if (starts.isEmpty()) break; // invalid placeholder string
 					 */
 					if (start == -1)
-						break; // invalid placeholder string
+						continue; // stray closing bracket, ignore it
 					if (mustIgnoreEnds != 0) {
 						--mustIgnoreEnds;
 						continue;
@@ -146,8 +149,15 @@ public class PlaceholderReplacer implements Comparable<PlaceholderReplacer> {
 						// Bukkit.getLogger().info(">> Restart, i = " + i + ", line = '" + line + "' ; start " + start + " ; mustIgnoreEnds " +
 						// mustIgnoreEnds);
 					}
+					// no match ; if it contained nested placeholders, rescan right after its opening bracket so they can be parsed on their own
+					else if (hasNested) {
+						i = start;
+					}
 
-					// no match ; just continue, ignore this placeholder
+					// this placeholder is done, the next opening bracket starts a new one
+					start = -1;
+					mustIgnoreEnds = 0;
+					hasNested = false;
 				}
 			}
 		}
