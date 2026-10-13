@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.guillaumevdn.gcore.GCore;
 import com.guillaumevdn.gcore.lib.collection.CollectionUtils;
@@ -217,17 +218,31 @@ public abstract class Variants<V extends Variant, DE extends Enum<DE>, D extends
 
 	protected abstract V createElement(String id, D data) throws Throwable;
 
+	// whether an entry whose data doesn't exist on the running version should prevent loading, or just be skipped
+	protected boolean isMissingDataFatal() {
+		return true;
+	}
+
 	public V registerIfHasCurrentVersion(String id, List<D> datas) throws Throwable {
 		if (!datas.isEmpty()) {
-			D first = datas.stream().filter(data -> data.getVersionComparison().compare(Version.CURRENT, data.getVersion())).findFirst().orElse(null);
+			List<D> matching = datas.stream().filter(data -> data.getVersionComparison().compare(Version.CURRENT, data.getVersion())).collect(Collectors.toList());
+			D first = matching.stream().filter(data -> {
+				SimpleExistingVariantData<?, ?> existing = ObjectUtils.castOrNull(data, SimpleExistingVariantData.class);
+				return existing == null || existing.getDataInstance() != null || existing.getDataName().equals("NONE");
+			}).findFirst().orElse(matching.isEmpty() ? null : matching.get(0));
 			if (first != null) {
 				SimpleExistingVariantData existing = ObjectUtils.castOrNull(first, SimpleExistingVariantData.class);
 				if (existing != null && existing.getDataInstance() == null) {
 					if (existing.getDataName().equals("NONE")) {
 						return null; // we do not want to register this material on this version, it's a choice here
 					}
-					throw new ConfigError("variant " + typeName + " " + id + " has invalid " + first.getVersionComparison().getSymbol() + first.getVersion()
-							+ " data '" + first.getDataName() + "' (don't exist even though we're running this version)");
+					String message = "variant " + typeName + " " + id + " has invalid " + first.getVersionComparison().getSymbol() + first.getVersion()
+							+ " data '" + first.getDataName() + "' (don't exist even though we're running this version)";
+					if (!isMissingDataFatal()) {
+						GCore.inst().getMainLogger().warning("Skipping " + message);
+						return null;
+					}
+					throw new ConfigError(message);
 				}
 				V value = createElement(id.toUpperCase(), first);
 				register(value);

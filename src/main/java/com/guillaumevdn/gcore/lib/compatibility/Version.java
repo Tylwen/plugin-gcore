@@ -35,6 +35,11 @@ public enum Version {
     MC_1_20_R3(CollectionUtils.asList("1.20.4"), "v1_20_R3", true), MC_1_20_R4(CollectionUtils.asList("1.20.5", "1.20.6"), "v1_20_R4", true),
     MC_1_21_R1(CollectionUtils.asList("1.21", "1.21.1"), "v1_21_R1", true),
     MC_1_21_R3(CollectionUtils.asList("1.21.2", "1.21.3"), "v1_21_R2", true),
+    MC_1_21_R4(CollectionUtils.asList("1.21.4"), "v1_21_R3", true),
+    MC_1_21_R5(CollectionUtils.asList("1.21.5"), "v1_21_R4", true),
+    MC_1_21_R6(CollectionUtils.asList("1.21.6", "1.21.7", "1.21.8"), "v1_21_R5", true),
+    MC_1_21_R7(CollectionUtils.asList("1.21.9", "1.21.10"), "v1_21_R6", true),
+    MC_1_21_R8(CollectionUtils.asList("1.21.11"), "v1_21_R7", true),
 
     UNSUPPORTED(CollectionUtils.asList("UNSUPPORTED"), null) // this will be used if we find a package name that's not listed above (a not yet updated newer
                                                              // version most likely)

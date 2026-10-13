@@ -22,6 +22,7 @@ import com.guillaumevdn.gcore.lib.concurrency.RWWeakHashMap;
 import com.guillaumevdn.gcore.lib.gui.element.item.type.types.border.BorderGUIItem;
 import com.guillaumevdn.gcore.lib.gui.internal.Handler;
 import com.guillaumevdn.gcore.lib.gui.internal.protocol.ProtocolHandler;
+import com.guillaumevdn.gcore.lib.compatibility.Version;
 import com.guillaumevdn.gcore.lib.gui.internal.vanilla.VanillaHandler;
 import com.guillaumevdn.gcore.lib.gui.struct.ClickCall.ClickType;
 import com.guillaumevdn.gcore.lib.number.NumberUtils;
@@ -103,7 +104,8 @@ public class GUI {
 		this.regularItemSlots = regularItemSlots;
 		if (this.options.contains(Option.AUTO_BACK_ITEM) && type.getBackItemSlot() != -1)
 			regularItemSlots.remove((Integer) (this.backItemSlot = type.getBackItemSlot()));
-		this.handler = ConfigGCore.allowProtocolGUIs && PluginUtils.isPluginEnabled("ProtocolLib") ? new ProtocolHandler(this) : new VanillaHandler(this);
+		// packet-based GUIs rely on NMS names that haven't been mapped for versions newer than 1.21.3
+		this.handler = ConfigGCore.allowProtocolGUIs && Version.CURRENT.isLessOrEqualsTo(Version.MC_1_21_R3) && PluginUtils.isPluginEnabled("ProtocolLib") ? new ProtocolHandler(this) : new VanillaHandler(this);
 	}
 
 	// ----- get

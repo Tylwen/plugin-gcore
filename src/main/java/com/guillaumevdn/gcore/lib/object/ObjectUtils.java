@@ -162,7 +162,8 @@ public final class ObjectUtils {
 
 	public static Sound soundTypeOrNull(String name) {
 		for (Sound sounds : Sound.values()) {
-			if (sounds.name().equalsIgnoreCase(name)) {
+			// some implementations (Paper 1.21.11) return names with dots instead of underscores
+			if (sounds.name().replace('.', '_').equalsIgnoreCase(name)) {
 				return sounds;
 			}
 		}

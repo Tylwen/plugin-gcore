@@ -2,7 +2,7 @@
 
 plugins {
     java
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.gradleup.shadow") version "9.2.2"
 }
 
 group = "com.guillaumevdn"
@@ -28,7 +28,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.3-R0.1-SNAPSHOT")
     compileOnly("com.mojang:authlib:1.5.26")
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") { exclude(group = "*", module = "*") }
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
     compileOnly("org.black_ixx:playerpoints:3.2.6")
     compileOnly("com.arcaniax:HeadDatabase-API:1.3.1")
     compileOnly("me.clip:placeholderapi:2.11.6")
@@ -60,7 +60,7 @@ tasks.register("copyFiles") {
 
     doLast {
         copy {
-            from("$buildDir/libs/GCore.jar")
+            from(layout.buildDirectory.file("libs/GCore.jar"))
             into("/run/media/guillaumevdn/GUIGUI DISK/projets/plugins/servers/plugins-server-1.21/plugins")
         }
     }

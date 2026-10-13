@@ -24,6 +24,11 @@ public final class Sounds extends Variants<Sound, SoundExtra, SoundData> {
 	}
 
 	@Override
+	protected boolean isMissingDataFatal() {
+		return false;
+	}
+
+	@Override
 	protected Sound createElement(String id, SoundData data) throws Throwable {
 		return new Sound(id, data);
 	}
